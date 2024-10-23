@@ -6,11 +6,13 @@ import (
 	"os"
 	"os/signal"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/joho/godotenv"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"github.com/umardev500/pos-backend/contracts"
+	"github.com/umardev500/pos-backend/database"
 	"github.com/umardev500/pos-backend/di"
 	"github.com/umardev500/pos-backend/router"
 )
@@ -32,7 +34,7 @@ func (a *App) Start(ctx context.Context, r contracts.RouterInterface) error {
 
 	go func() {
 		port := os.Getenv("PORT")
-		log.Info().Str("port", port).Msg("Starting server")
+		log.Info().Msgf("🚀 Server listening on port %s", port)
 		ch <- fiberApp.Listen(":" + port)
 	}()
 
@@ -61,10 +63,11 @@ func main() {
 	ctx, cancel := signal.NotifyContext(context.Background(), os.Kill, os.Interrupt)
 	defer cancel()
 
-	// db := database.NewDB(ctx)
+	db := database.NewDB(ctx)
+	v := validator.New()
 
 	// Initialize DI container
-	container := di.NewRegistryContainer(nil)
+	container := di.NewRegistryContainer(db, v)
 
 	// Initialize router
 	r := router.NewRouter(container)
