@@ -1,9 +1,12 @@
 package di
 
-import "github.com/umardev500/pos-backend/contracts"
+import (
+	"github.com/umardev500/pos-backend/contracts"
+	"github.com/umardev500/pos-backend/database"
+)
 
-func NewRegistryContainer() []contracts.ContainerInterface {
+func NewRegistryContainer(db *database.DB) []contracts.ContainerInterface {
 	return []contracts.ContainerInterface{
-		NewUserContainer(),
+		NewUserContainer(db),
 	}
 }

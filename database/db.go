@@ -20,16 +20,16 @@ var (
 	once     sync.Once
 )
 
-func NewDB() *DB {
+func NewDB(ctx context.Context) *DB {
 	once.Do(func() {
 		DSN := os.Getenv("DSN")
-		dbPool, err := pgxpool.New(context.Background(), DSN)
+		dbPool, err := pgxpool.New(ctx, DSN)
 		if err != nil {
 			log.Fatal().Msgf("Unable to connect to database: %v", err)
 		}
 
 		// Ping the database
-		err = dbPool.Ping(context.Background())
+		err = dbPool.Ping(ctx)
 		if err != nil {
 			log.Fatal().Msgf("Unable to ping database: %v", err)
 		}
