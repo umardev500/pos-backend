@@ -7,6 +7,8 @@ import (
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/rs/zerolog/log"
+	"github.com/umardev500/pos-backend/constants"
+	"github.com/umardev500/pos-backend/contracts"
 )
 
 type DB struct {
@@ -40,4 +42,24 @@ func NewDB() *DB {
 	})
 
 	return instance
+}
+
+func (d *DB) WithTransaction(ctx context.Context, f func(context.Context) error) error {
+	tx, err := d.conn.Begin(ctx)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback(ctx)
+
+	ctx = context.WithValue(ctx, constants.QueryKey, tx)
+	err = f(ctx)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (d *DB) GetConn(ctx context.Context) contracts.Query {
+	return d.conn
 }
