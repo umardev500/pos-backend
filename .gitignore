@@ -1,0 +1,54 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Output of the go coverage tool
+*.out
+
+# Dependency directories (vendor/)
+vendor/
+
+# Go workspace file
+go.work
+go.work.sum
+
+# Go build artifacts
+/build
+/bin
+*.log
+*.tmp
+
+# IDE-specific files
+### JetBrains IDEs ###
+.idea/
+*.iml
+
+### VSCode ###
+.vscode/
+.history/
+
+# OS-specific files
+### macOS ###
+.DS_Store
+
+### Windows ###
+Thumbs.db
+Desktop.ini
+
+# Docker related files
+docker-compose.override.yml
+
+# Logs and temporary files
+*.log
+*.tmp
+*.swp
+
+# Testing files
+*.test
+coverage.out
+
+# Go module cache
+go.sum
