@@ -11,6 +11,7 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"github.com/umardev500/pos-backend/contracts"
+	"github.com/umardev500/pos-backend/di"
 	"github.com/umardev500/pos-backend/router"
 )
 
@@ -60,8 +61,11 @@ func main() {
 	ctx, cancel := signal.NotifyContext(context.Background(), os.Kill, os.Interrupt)
 	defer cancel()
 
+	// Initialize DI container
+	container := di.NewRegistryContainer()
+
 	// Initialize router
-	r := router.NewRouter()
+	r := router.NewRouter(container)
 
 	// Start server
 	err = NewApp().Start(ctx, r)

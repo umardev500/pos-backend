@@ -5,10 +5,14 @@ import (
 	"github.com/umardev500/pos-backend/contracts"
 )
 
-type Router struct{}
+type Router struct {
+	container []contracts.ContainerInterface
+}
 
-func NewRouter() contracts.RouterInterface {
-	return &Router{}
+func NewRouter(container []contracts.ContainerInterface) contracts.RouterInterface {
+	return &Router{
+		container: container,
+	}
 }
 
 func (r *Router) Setup(app *fiber.App) {
@@ -22,7 +26,15 @@ func (r *Router) Setup(app *fiber.App) {
 }
 
 // setupApi defines the api routes
-func (r *Router) setupApi(router fiber.Router) {}
+func (r *Router) setupApi(router fiber.Router) {
+	for _, container := range r.container {
+		container.RegisterApi(router)
+	}
+}
 
 // setupWeb defines the web routes
-func (r *Router) setupWeb(router fiber.Router) {}
+func (r *Router) setupWeb(router fiber.Router) {
+	for _, container := range r.container {
+		container.RegisterWeb(router)
+	}
+}
