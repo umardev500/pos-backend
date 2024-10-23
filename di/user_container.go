@@ -23,6 +23,9 @@ func NewUserContainer(db *database.DB) contracts.ContainerInterface {
 	}
 }
 
-func (u *UserContainer) RegisterApi(router fiber.Router) {}
+func (u *UserContainer) RegisterApi(router fiber.Router) {
+	r := router.Group("user")
+	r.Post("/", u.handler.Create)
+}
 
 func (u *UserContainer) RegisterWeb(router fiber.Router) {}
