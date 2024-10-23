@@ -1,7 +1,6 @@
 package di
 
 import (
-	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/umardev500/pos-backend/app/handler"
 	"github.com/umardev500/pos-backend/app/repository"
@@ -14,10 +13,10 @@ type UserContainer struct {
 	handler contracts.UserHandlerInterface
 }
 
-func NewUserContainer(db *database.DB, v *validator.Validate) contracts.ContainerInterface {
+func NewUserContainer(db *database.DB, v contracts.ValidatorInterface) contracts.ContainerInterface {
 	repo := repository.NewUserRepository(db)
 	usecase := usecase.NewUserUsecase(repo)
-	handler := handler.NewUserHandler(usecase)
+	handler := handler.NewUserHandler(usecase, v)
 
 	return &UserContainer{
 		handler: handler,

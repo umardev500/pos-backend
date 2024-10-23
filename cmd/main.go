@@ -15,6 +15,7 @@ import (
 	"github.com/umardev500/pos-backend/database"
 	"github.com/umardev500/pos-backend/di"
 	"github.com/umardev500/pos-backend/router"
+	"github.com/umardev500/pos-backend/utils"
 )
 
 type App struct{}
@@ -64,7 +65,7 @@ func main() {
 	defer cancel()
 
 	db := database.NewDB(ctx)
-	v := validator.New()
+	v := utils.NewValidatorUtil(validator.New())
 
 	// Initialize DI container
 	container := di.NewRegistryContainer(db, v)
