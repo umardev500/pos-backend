@@ -56,3 +56,6 @@ go.sum
 # Air
 tmp
 .air.toml
+
+# Rest client
+test
