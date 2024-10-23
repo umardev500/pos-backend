@@ -52,3 +52,7 @@ coverage.out
 
 # Go module cache
 go.sum
+
+# Air
+tmp
+.air.toml
