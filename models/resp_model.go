@@ -9,10 +9,11 @@ type ValidationErrors struct {
 }
 
 type Response struct {
-	Code             int                 `json:"-"`
-	Success          bool                `json:"success"`
-	Message          string              `json:"message,omitempty"`
-	Data             interface{}         `json:"data,omitempty"`
-	ErrorCode        constants.ErrorCode `json:"error_code,omitempty"`
-	ValidationErrors []ValidationErrors  `json:"validationErrors,omitempty"`
+	Code             int                   `json:"-"`
+	Success          bool                  `json:"success"`
+	Message          constants.MessageText `json:"message,omitempty"`
+	Data             interface{}           `json:"data,omitempty"`
+	ErrorCode        constants.ErrorCode   `json:"error_code,omitempty"`
+	ValidationErrors []ValidationErrors    `json:"validationErrors,omitempty"`
+	RefCode          string                `json:"ref_code,omitempty"`
 }
