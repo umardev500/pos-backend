@@ -2,20 +2,17 @@ package handler
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/umardev500/pos-backend/constants"
 	"github.com/umardev500/pos-backend/contracts"
 	"github.com/umardev500/pos-backend/models"
 )
 
 type userHandler struct {
-	usecase  contracts.UserUsecaseInterface
-	validate contracts.ValidatorInterface
+	usecase contracts.UserUsecaseInterface
 }
 
-func NewUserHandler(usecase contracts.UserUsecaseInterface, v contracts.ValidatorInterface) contracts.UserHandlerInterface {
+func NewUserHandler(usecase contracts.UserUsecaseInterface) contracts.UserHandlerInterface {
 	return &userHandler{
-		usecase:  usecase,
-		validate: v,
+		usecase: usecase,
 	}
 }
 
@@ -25,12 +22,5 @@ func (u *userHandler) Create(c *fiber.Ctx) error {
 		return err
 	}
 
-	validationErrs := u.validate.Struct(payload)
-
-	return c.JSON(models.Response{
-		Success:          false,
-		Message:          "validation failed",
-		ErrorCode:        constants.ValidationErrorType,
-		ValidationErrors: validationErrs,
-	})
+	return c.SendStatus(200)
 }

@@ -15,8 +15,8 @@ type UserContainer struct {
 
 func NewUserContainer(db *database.DB, v contracts.ValidatorInterface) contracts.ContainerInterface {
 	repo := repository.NewUserRepository(db)
-	usecase := usecase.NewUserUsecase(repo)
-	handler := handler.NewUserHandler(usecase, v)
+	usecase := usecase.NewUserUsecase(repo, v)
+	handler := handler.NewUserHandler(usecase)
 
 	return &UserContainer{
 		handler: handler,
