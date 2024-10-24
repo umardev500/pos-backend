@@ -27,9 +27,10 @@ func (u *userUsecase) Create(ctx context.Context, payload models.CreateUserReque
 	validationErrs := u.validate.Struct(payload)
 	if len(validationErrs) > 0 {
 		return models.Response{
-			Code:    fiber.ErrUnprocessableEntity.Code,
-			Message: constants.MessageCommonValidationFailed,
-			Data:    validationErrs,
+			Code:      fiber.ErrUnprocessableEntity.Code,
+			Message:   constants.MessageCommonValidationFailed,
+			ErrorCode: constants.ValidationErrorType,
+			Errors:    validationErrs,
 		}
 	}
 
@@ -51,12 +52,18 @@ func (u *userUsecase) Create(ctx context.Context, payload models.CreateUserReque
 	err = u.repo.Create(ctx, payload)
 	if err != nil {
 		refCode := utils.LogError(err)
+		errs, errCode, msg, statusCode := utils.HandlePostgresError(err)
+		if msg == "" {
+			msg = constants.MessageUserCreateFailed
+		}
 
 		return models.Response{
-			Code:    fiber.StatusInternalServerError,
-			Success: false,
-			Message: constants.MessageUserCreateFailed,
-			RefCode: refCode,
+			Code:      statusCode,
+			Success:   false,
+			Message:   msg,
+			ErrorCode: *errCode,
+			Errors:    errs,
+			RefCode:   refCode,
 		}
 	}
 

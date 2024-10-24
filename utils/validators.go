@@ -46,19 +46,19 @@ func (v *validatorUtil) parseTag(tag, field string) string {
 	return ""
 }
 
-func (v *validatorUtil) Struct(payload interface{}) []models.ValidationErrors {
+func (v *validatorUtil) Struct(payload interface{}) []models.ErrItem {
 	err := v.validate.Struct(payload)
 	if err == nil {
 		return nil
 	}
 
-	var validationErrs []models.ValidationErrors
+	var validationErrs []models.ErrItem
 
 	// Handler validation errors
 	for _, validationErr := range err.(validator.ValidationErrors) {
 		field := validationErr.Field()
 		tag := validationErr.Tag()
-		validationErr := models.ValidationErrors{
+		validationErr := models.ErrItem{
 			Field:   field,
 			Message: v.parseTag(tag, field),
 			Case:    tag,
