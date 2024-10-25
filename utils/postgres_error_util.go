@@ -70,10 +70,10 @@ func HandlePostgresError(err error) (interface{}, *constants.ErrorCode, constant
 		// Unique constraint error
 		case "23505":
 			errItem := handleUniqueViolationError(pgErr)
-			errCode = constants.ConflictErrorType
+			errCode = constants.ErrorCodeConflict
 			return errItem, &errCode, "", fiber.StatusConflict
 		default:
-			errCode = constants.InternalServerErrorType
+			errCode = constants.ErrorCodeInternalServer
 			return nil, &errCode, constants.MessageCommonInternalServerError, fiber.StatusInternalServerError
 		}
 	}

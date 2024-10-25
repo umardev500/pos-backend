@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/google/uuid"
 	"github.com/umardev500/pos-backend/constants"
 	"github.com/umardev500/pos-backend/contracts"
 	"github.com/umardev500/pos-backend/models"
@@ -22,14 +23,13 @@ func NewUserUsecase(repo contracts.UserRepositoryInterface, v contracts.Validato
 	}
 }
 
-// Create creates a new user
 func (u *userUsecase) Create(ctx context.Context, payload models.CreateUserRequest) models.Response {
 	validationErrs := u.validate.Struct(payload)
 	if len(validationErrs) > 0 {
 		return models.Response{
 			Code:      fiber.ErrUnprocessableEntity.Code,
 			Message:   constants.MessageCommonValidationFailed,
-			ErrorCode: constants.ValidationErrorType,
+			ErrorCode: constants.ErrorCodeValidation,
 			Errors:    validationErrs,
 		}
 	}
@@ -71,5 +71,31 @@ func (u *userUsecase) Create(ctx context.Context, payload models.CreateUserReque
 		Code:    fiber.StatusCreated,
 		Success: true,
 		Message: constants.MessageUserCreateSuccess,
+	}
+}
+
+func (u *userUsecase) Delete(ctx context.Context, ids []uuid.UUID) models.Response {
+	err := u.repo.Delete(ctx, ids)
+	if err != nil {
+		refCode := utils.LogError(err)
+		errs, errCode, msg, statusCode := utils.HandlePostgresError(err)
+		if msg == "" {
+			msg = constants.MessageUserDeleteFailed
+		}
+
+		return models.Response{
+			Code:      statusCode,
+			Success:   false,
+			Message:   msg,
+			ErrorCode: *errCode,
+			Errors:    errs,
+			RefCode:   refCode,
+		}
+	}
+
+	return models.Response{
+		Code:    fiber.StatusOK,
+		Success: true,
+		Message: constants.MessageUserDeleteSuccess,
 	}
 }
